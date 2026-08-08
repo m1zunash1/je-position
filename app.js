@@ -1,7 +1,7 @@
 const LANGUAGES = {
-  ja: { label: '日本語', column: 1, placeholder: 'ひらがなを1文字' },
-  en: { label: '英語', column: 0, placeholder: 'アルファベットを1文字' },
-  reading: { label: 'カタカナ英語（英語読み）', column: 2, placeholder: 'ひらがなを1文字' },
+  ja: { label: '日本語', column: 1, placeholder: 'ひらがな1文字' },
+  en: { label: '英語', column: 0, placeholder: 'アルファベット1文字' },
+  reading: { label: 'カタカナ英語（英語読み）', column: 2, placeholder: 'ひらがな1文字' },
 };
 
 const state = { rows: [] };
