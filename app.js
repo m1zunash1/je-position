@@ -106,6 +106,21 @@ function updateLanguageControls() {
   validateInputs(false);
 }
 
+function updatePositionInputs() {
+  const shouldScan = $('scanSamePosition').checked;
+  for (const id of ['leftPos', 'rightPos']) {
+    const input = $(id);
+    if (shouldScan) {
+      if (input.value) input.dataset.previousValue = input.value;
+      input.value = '';
+      input.disabled = true;
+    } else {
+      input.disabled = false;
+      input.value = input.dataset.previousValue || '1';
+    }
+  }
+}
+
 function validateOne(side, showMessage) {
   const lang = $(`${side}Lang`).value;
   const input = $(`${side}Char`);
@@ -146,6 +161,40 @@ function matchingVariants(row, condition) {
   return row[condition.lang].filter((word) => charAt(word, condition.dir, condition.pos) === condition.char);
 }
 
+function scanMatchingPairs(row, left, right, ignoreSameWord) {
+  const matches = [];
+  for (const leftWord of row[left.lang]) {
+    for (const rightWord of row[right.lang]) {
+      if (ignoreSameWord && leftWord === rightWord) continue;
+      const limit = Math.min(splitChars(leftWord).length, splitChars(rightWord).length);
+      const positions = [];
+      for (let position = 1; position <= limit; position += 1) {
+        if (
+          charAt(leftWord, left.dir, position) === left.char
+          && charAt(rightWord, right.dir, position) === right.char
+        ) {
+          positions.push(position);
+        }
+      }
+      if (positions.length) matches.push({ leftWord, rightWord, positions });
+    }
+  }
+  return matches;
+}
+
+function fixedPositionPairs(row, left, right, ignoreSameWord) {
+  const leftWords = matchingVariants(row, left);
+  const rightWords = matchingVariants(row, right);
+  const matches = [];
+  for (const leftWord of leftWords) {
+    for (const rightWord of rightWords) {
+      if (ignoreSameWord && leftWord === rightWord) continue;
+      matches.push({ leftWord, rightWord, positions: [] });
+    }
+  }
+  return matches;
+}
+
 function searchPosition() {
   try {
     if (!state.rows.length) throw new Error('内蔵データの読み込みに失敗しています。');
@@ -153,23 +202,24 @@ function searchPosition() {
 
     const left = readCondition('left');
     const right = readCondition('right');
-    if (![left.pos, right.pos].every((value) => Number.isInteger(value) && value >= 1)) {
+    const scanSamePosition = $('scanSamePosition').checked;
+    const ignoreSameWord = $('ignoreSameWord').checked;
+    if (!scanSamePosition && ![left.pos, right.pos].every((value) => Number.isInteger(value) && value >= 1)) {
       throw new Error('文字目は1以上の整数で入力してください。');
     }
     if (!left.char || !right.char) throw new Error('指定文字を両方入力してください。');
 
-    const hits = state.rows.flatMap((row) => {
-      const leftWords = matchingVariants(row, left);
-      const rightWords = matchingVariants(row, right);
-      return leftWords.length && rightWords.length ? [{ leftWords, rightWords }] : [];
-    });
+    const hits = state.rows.flatMap((row) => scanSamePosition
+      ? scanMatchingPairs(row, left, right, ignoreSameWord)
+      : fixedPositionPairs(row, left, right, ignoreSameWord));
 
     summaryEl.textContent = `${hits.length}件ヒット`;
     resultsEl.innerHTML = hits.length
       ? hits.map((hit) => `
           <article class="result-item">
-            <div><span class="tag">${escapeHtml(LANGUAGES[left.lang].label)}</span>${escapeHtml(hit.leftWords.join('／'))}</div>
-            <div><span class="tag">${escapeHtml(LANGUAGES[right.lang].label)}</span>${escapeHtml(hit.rightWords.join('／'))}</div>
+            ${scanSamePosition ? `<div class="match-position">${hit.positions.map((position) => `${position}文字目`).join('・')}</div>` : ''}
+            <div><span class="tag">${escapeHtml(LANGUAGES[left.lang].label)}</span>${escapeHtml(hit.leftWord)}</div>
+            <div><span class="tag">${escapeHtml(LANGUAGES[right.lang].label)}</span>${escapeHtml(hit.rightWord)}</div>
           </article>`).join('')
       : '<div class="result-item empty">ヒットなし</div>';
   } catch (error) {
@@ -181,6 +231,7 @@ function searchPosition() {
 function init() {
   if (typeof EMBEDDED_SHEET_CSV === 'string') state.rows = processRows(parseCsv(EMBEDDED_SHEET_CSV));
   ['leftLang', 'rightLang'].forEach((id) => $(id).addEventListener('change', updateLanguageControls));
+  $('scanSamePosition').addEventListener('change', updatePositionInputs);
   ['leftChar', 'rightChar'].forEach((id) => $(id).addEventListener('input', () => validateInputs(false)));
   ['leftChar', 'rightChar', 'leftPos', 'rightPos'].forEach((id) => {
     $(id).addEventListener('keydown', (event) => {
@@ -189,6 +240,7 @@ function init() {
   });
   searchBtn.addEventListener('click', searchPosition);
   updateLanguageControls();
+  updatePositionInputs();
 }
 
 init();

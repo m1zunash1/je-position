@@ -102,6 +102,48 @@ h1 {
   font-weight: 700;
 }
 
+.search-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.check-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 10px 12px;
+  border: 1px solid #f1c8dd;
+  border-radius: 12px;
+  background: #fffafc;
+  cursor: pointer;
+}
+
+.check-option input {
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: #ff78ad;
+}
+
+.check-option span,
+.check-option small {
+  display: block;
+}
+
+.check-option small {
+  margin-top: 2px;
+  color: #8a536c;
+  font-size: 12px;
+}
+
+input:disabled {
+  background: #f3edf0;
+  color: #9c8791;
+  cursor: not-allowed;
+}
+
 input, select, button {
   font-size: 15px;
   padding: 9px 10px;
@@ -210,6 +252,17 @@ fieldset:hover {
   margin-top: 5px;
 }
 
+.match-position {
+  display: inline-block;
+  margin-bottom: 5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #f0e7ff;
+  color: #6c438c;
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .empty {
   color: #8a536c;
 }
@@ -226,6 +279,7 @@ fieldset:hover {
 
 @media (max-width: 760px) {
   .grid2 { grid-template-columns: 1fr; }
+  .search-options { grid-template-columns: 1fr; }
   .cond-line input[type="text"] { min-width: 140px; flex: 1; }
 }
 

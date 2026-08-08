@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=scan-options-1" />
   </head>
   <body>
     <main class="container">
@@ -49,6 +49,16 @@
             </div>
           </fieldset>
         </div>
+        <div class="search-options" aria-label="検索オプション">
+          <label class="check-option">
+            <input id="scanSamePosition" type="checkbox" checked />
+            <span><strong>同位置を走査</strong><small>条件1・2を同じ文字位置で順番に検索</small></span>
+          </label>
+          <label class="check-option">
+            <input id="ignoreSameWord" type="checkbox" checked />
+            <span><strong>同じ単語を無視</strong><small>「ぎあ／ぎあ」のような同一表記を除外</small></span>
+          </label>
+        </div>
         <div class="row search-row">
           <button id="searchBtn" type="button" class="search">検索</button>
         </div>
@@ -62,6 +72,6 @@
     </main>
 
     <script src="sheet-data.js"></script>
-    <script src="app.js?v=0d8a7c6"></script>
+    <script src="app.js?v=scan-options-1"></script>
   </body>
 </html>
