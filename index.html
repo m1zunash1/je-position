@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>日英同時位置検索</title>
+    <title>3言語 同時位置検索</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700;800&display=swap" rel="stylesheet" />
@@ -11,29 +11,41 @@
   </head>
   <body>
     <main class="container">
-      <h1>日英同時位置検索</h1>
-      <p class="sub">同じ意味の日本語と英語に対して、先頭/末尾から指定の位置に指定の文字が来るペアを検索します。</p>
+      <h1>3言語 同時位置検索</h1>
+      <p class="sub">日本語・英語・カタカナ英語（英語読み）から2つを選び、同じ意味の単語を文字の位置で検索します。</p>
 
       <section class="panel">
         <h2>検索条件</h2>
         <div id="inputError" class="input-error" aria-live="polite"></div>
         <div class="grid2">
-          <fieldset>
-            <legend>日本語</legend>
+          <fieldset class="condition-card">
+            <legend>条件 1</legend>
+            <label class="language-label" for="leftLang">言語</label>
+            <select id="leftLang" class="language-select">
+              <option value="ja" selected>日本語</option>
+              <option value="en">英語</option>
+              <option value="reading">カタカナ英語（英語読み）</option>
+            </select>
             <div class="row cond-line">
-              <select id="bDir"><option value="start">先頭から</option><option value="end">末尾から</option></select>
-              <input id="bPos" type="number" min="1" value="1" />
+              <select id="leftDir" aria-label="条件1の方向"><option value="start">先頭から</option><option value="end">末尾から</option></select>
+              <input id="leftPos" aria-label="条件1の文字位置" type="number" min="1" value="1" />
               <span>文字目が</span>
-              <input id="bChar" type="text" placeholder="ひらがなを入力" />
+              <input id="leftChar" type="text" inputmode="text" maxlength="2" />
             </div>
           </fieldset>
-          <fieldset>
-            <legend>英語</legend>
+          <fieldset class="condition-card">
+            <legend>条件 2</legend>
+            <label class="language-label" for="rightLang">言語</label>
+            <select id="rightLang" class="language-select">
+              <option value="ja">日本語</option>
+              <option value="en" selected>英語</option>
+              <option value="reading">カタカナ英語（英語読み）</option>
+            </select>
             <div class="row cond-line">
-              <select id="aDir"><option value="start">先頭から</option><option value="end">末尾から</option></select>
-              <input id="aPos" type="number" min="1" value="1" />
+              <select id="rightDir" aria-label="条件2の方向"><option value="start">先頭から</option><option value="end">末尾から</option></select>
+              <input id="rightPos" aria-label="条件2の文字位置" type="number" min="1" value="1" />
               <span>文字目が</span>
-              <input id="aChar" type="text" placeholder="アルファベットを入力" />
+              <input id="rightChar" type="text" inputmode="text" maxlength="2" />
             </div>
           </fieldset>
         </div>

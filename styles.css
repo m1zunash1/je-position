@@ -54,7 +54,7 @@ h1 {
 }
 
 .panel h2 {
-  margin-top: 0;
+  margin: 0;
   font-size: 19px;
 }
 
@@ -82,6 +82,24 @@ h1 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+}
+
+.condition-card {
+  padding: 12px;
+}
+
+.language-label {
+  display: block;
+  margin-bottom: 5px;
+  color: #8a4565;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.language-select {
+  width: 100%;
+  margin-bottom: 12px;
+  font-weight: 700;
 }
 
 input, select, button {
@@ -160,6 +178,11 @@ fieldset {
   transition: transform 0.16s ease;
 }
 
+legend {
+  padding: 0 6px;
+  font-weight: 800;
+}
+
 fieldset:hover {
   transform: translateY(-1px);
 }
@@ -183,6 +206,14 @@ fieldset:hover {
   background: #fff2fa;
 }
 
+.result-item div + div {
+  margin-top: 5px;
+}
+
+.empty {
+  color: #8a536c;
+}
+
 .tag {
   display: inline-block;
   padding: 1px 8px;
@@ -195,6 +226,7 @@ fieldset:hover {
 
 @media (max-width: 760px) {
   .grid2 { grid-template-columns: 1fr; }
+  .cond-line input[type="text"] { min-width: 140px; flex: 1; }
 }
 
 @keyframes panel-fade-in {
