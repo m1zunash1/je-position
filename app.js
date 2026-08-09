@@ -161,11 +161,16 @@ function matchingVariants(row, condition) {
   return row[condition.lang].filter((word) => charAt(word, condition.dir, condition.pos) === condition.char);
 }
 
-function scanMatchingPairs(row, left, right, ignoreSameWord) {
+function shouldSkipPair(leftWord, rightWord, ignoreSameWord, matchWordLength) {
+  if (ignoreSameWord && leftWord === rightWord) return true;
+  return matchWordLength && splitChars(leftWord).length !== splitChars(rightWord).length;
+}
+
+function scanMatchingPairs(row, left, right, ignoreSameWord, matchWordLength) {
   const matches = [];
   for (const leftWord of row[left.lang]) {
     for (const rightWord of row[right.lang]) {
-      if (ignoreSameWord && leftWord === rightWord) continue;
+      if (shouldSkipPair(leftWord, rightWord, ignoreSameWord, matchWordLength)) continue;
       const limit = Math.min(splitChars(leftWord).length, splitChars(rightWord).length);
       const positions = [];
       for (let position = 1; position <= limit; position += 1) {
@@ -182,13 +187,13 @@ function scanMatchingPairs(row, left, right, ignoreSameWord) {
   return matches;
 }
 
-function fixedPositionPairs(row, left, right, ignoreSameWord) {
+function fixedPositionPairs(row, left, right, ignoreSameWord, matchWordLength) {
   const leftWords = matchingVariants(row, left);
   const rightWords = matchingVariants(row, right);
   const matches = [];
   for (const leftWord of leftWords) {
     for (const rightWord of rightWords) {
-      if (ignoreSameWord && leftWord === rightWord) continue;
+      if (shouldSkipPair(leftWord, rightWord, ignoreSameWord, matchWordLength)) continue;
       matches.push({ leftWord, rightWord, positions: [] });
     }
   }
@@ -204,14 +209,15 @@ function searchPosition() {
     const right = readCondition('right');
     const scanSamePosition = $('scanSamePosition').checked;
     const ignoreSameWord = $('ignoreSameWord').checked;
+    const matchWordLength = $('matchWordLength').checked;
     if (!scanSamePosition && ![left.pos, right.pos].every((value) => Number.isInteger(value) && value >= 1)) {
       throw new Error('文字目は1以上の整数で入力してください。');
     }
     if (!left.char || !right.char) throw new Error('指定文字を両方入力してください。');
 
     const hits = state.rows.flatMap((row) => scanSamePosition
-      ? scanMatchingPairs(row, left, right, ignoreSameWord)
-      : fixedPositionPairs(row, left, right, ignoreSameWord));
+      ? scanMatchingPairs(row, left, right, ignoreSameWord, matchWordLength)
+      : fixedPositionPairs(row, left, right, ignoreSameWord, matchWordLength));
 
     summaryEl.textContent = `${hits.length}件ヒット`;
     resultsEl.innerHTML = hits.length

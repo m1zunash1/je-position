@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=scan-options-1" />
+    <link rel="stylesheet" href="styles.css?v=search-options-2" />
   </head>
   <body>
     <main class="container">
@@ -58,6 +58,10 @@
             <input id="ignoreSameWord" type="checkbox" checked />
             <span><strong>同じ単語を無視</strong><small>「ぎあ／ぎあ」のような同一表記を除外</small></span>
           </label>
+          <label class="check-option">
+            <input id="matchWordLength" type="checkbox" />
+            <span><strong>文字数一致</strong><small>条件1・2の単語が同じ文字数のペアに限定</small></span>
+          </label>
         </div>
         <div class="row search-row">
           <button id="searchBtn" type="button" class="search">検索</button>
@@ -72,6 +76,6 @@
     </main>
 
     <script src="sheet-data.js"></script>
-    <script src="app.js?v=scan-options-1"></script>
+    <script src="app.js?v=search-options-2"></script>
   </body>
 </html>
